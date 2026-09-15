@@ -49,3 +49,21 @@ spec:
         - name: mysql
           persistentVolumeClaim:
             claimName: mysql
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  namespace: expense
+spec:
+  clusterIP: None
+  selector:
+    app: expense
+    environment: dev
+    tier: mysql
+    ports:
+    - protocol: TCP
+      port: 3306  #service port
+      targetPort: 3306 #target port of the pod/container
