@@ -3,6 +3,10 @@ kind: PersistentVolumeClaim
 metadata:
   name: mysql
   namespace: expense
+  labels:
+    app: expense
+    environment: dev
+    tier: mysql
 spec:
   storageClassName: "expense-ebs" # Use the default storage class
   accessModes:
@@ -10,3 +14,40 @@ spec:
   resources:
     requests:
       storage: 4Gi 
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+  namespace: expense
+spec:
+  selector:
+    matchLabels:
+      app: expense
+      environment: dev
+      tier: mysql # has to match .spec.template.metadata.labels
+  serviceName: "nginx"
+  replicas: 3 # by default is 1
+  minReadySeconds: 10 # by default is 0
+  template:
+    metadata:
+      labels:
+        app: expense
+        environment: dev
+        tier: mysql # has to match .spec.selector.matchLabels
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: mysql
+        image: mysql:5.7
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        - name: mysql
+          mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql
+          persistentVolumeClaim:
+            claimName: mysql
