@@ -16,6 +16,24 @@ spec:
 
 ---
 apiVersion: v1
+kind: Service   
+metadata:
+  name: mysql
+  namespace: expense  
+spec:
+  selector: 
+    app: expense
+    environment: dev
+    tier: mysql 
+    
+  ports:
+    - protocol: TCP 
+      port: 3306  #service port
+      targetPort: 3306 #target port of the pod/container
+
+---
+
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mysql
