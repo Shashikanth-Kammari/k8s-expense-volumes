@@ -33,22 +33,22 @@ spec:
 
 ---
 
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mysql
-  namespace: expense
-  labels:
-    app: expense
-    environment: dev
-    tier: mysql
-spec:
-  storageClassName: "expense-ebs" # Use the default storage class
-  accessModes:
-    - ReadWriteOnce     
-  resources:
-    requests:
-      storage: 4Gi 
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: mysql
+#   namespace: expense
+#   labels:
+#     app: expense
+#     environment: dev
+#     tier: mysql
+# spec:
+#   storageClassName: "expense-ebs" # Use the default storage class
+#   accessModes:
+#     - ReadWriteOnce     
+#   resources:
+#     requests:
+#       storage: 4Gi 
 ---
 
 apiVersion: apps/v1
@@ -57,12 +57,12 @@ metadata:
   name: mysql
   namespace: expense
 spec:
+  serviceName: "mysql-headless"
   selector:
     matchLabels:
       app: expense
       environment: dev
       tier: mysql # has to match .spec.template.metadata.labels
-  serviceName: "nginx"
   replicas: 2 # by default is 1
   template:
     metadata:
@@ -93,5 +93,4 @@ spec:
           requests:
             storage: 1Gi
 
----
 
