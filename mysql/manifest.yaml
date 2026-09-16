@@ -47,15 +47,15 @@ spec:
           mountPath: /var/lib/mysql
       nodeSelector:
           topology.kubernetes.io/zone: us-east-1d
-      volumeClaimTemplates:
-      - metadata:
-          name: mysql
-        spec:
-          accessModes: [ "ReadWriteOnce" ]
-          storageClassName: "expense-ebs"
-          resources:
-            requests:
-              storage: 1Gi
+  volumeClaimTemplates:
+    - metadata:
+      name: mysql
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: "expense-ebs"
+        resources:
+          requests:
+            storage: 1Gi
 
 ---
 
